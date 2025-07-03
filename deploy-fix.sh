@@ -159,7 +159,7 @@ main() {
     cd $MOFLOT_DIR/deployment
     
     log "Eliminar contenedores e imágenes Docker antes de recrear..."
-    docker compose down -v
+    docker compose down -v listener
     remove_dangling_docker_images
 
     # Pull Docker images
@@ -169,10 +169,10 @@ main() {
     systemctl restart docker
 
     log "Compilando contenedores de Docker..."
-    docker compose build
+    docker compose build backend listener
 
     log "Iniciando servicios de Docker 1/2..."
-    docker compose up -d --force-recreate postgres redis backend frontend
+    docker compose up -d postgres redis backend frontend
 
     log "Estableciendo clave de aplicación..."
     docker compose exec -u root backend chown -R www-data:www-data /var/www/html
@@ -185,7 +185,7 @@ main() {
     docker compose exec backend php artisan app:import-legacy-data
     
     log "Iniciando servicios de Docker 2/2..."
-    docker compose up -d --force-recreate emitter processor listener
+    docker compose up -d emitter processor listener
 
     success "¡Proceso de despliegue completado con éxito!"
 
