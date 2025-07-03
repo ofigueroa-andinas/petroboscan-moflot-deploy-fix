@@ -198,6 +198,7 @@ main() {
     [ -d "/home/async" ] && rm -rf /home/async
     [ -d "/home/deployment" ] && rm -rf /home/deployment
     [ -d "/home/Archive" ] && rm -rf /home/Archive
+    [ -d "/home/moflot-test" ] && rm -rf /home/moflot-test
 
     success "¡Proceso de despliegue completado con éxito!"
 
