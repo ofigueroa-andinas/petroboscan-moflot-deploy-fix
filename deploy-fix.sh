@@ -149,7 +149,7 @@ main() {
 
     git -C $MOFLOT_DIR/deployment fetch origin
     git -C $MOFLOT_DIR/deployment reset --hard HEAD
-    git -C $MOFLOT_DIR/deployment checkout -B deploy origin/deploy
+    git -C $MOFLOT_DIR/deployment checkout -B test origin/test
 
     log "Iniciando proceso de despliegue..."
     
