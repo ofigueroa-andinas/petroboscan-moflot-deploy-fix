@@ -122,8 +122,8 @@ main() {
     export https_proxy=$PB_PROXY
     export no_proxy="localhost,127.0.0.1"
 
-    git config --global http.proxy $PB_PROXY
-    git config --global https.proxy $PB_PROXY
+    git config --global http.proxy $http_proxy
+    git config --global https.proxy $https_proxy
 
     # Validate all directories exist
     check_directory "$MOFLOT_DIR/web"
