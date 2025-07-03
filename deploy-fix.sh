@@ -73,6 +73,31 @@ validate_proxy() {
     fi
 }
 
+configure_proxy() {
+    # Git
+    git config --global http.proxy $http_proxy
+    git config --global https.proxy $https_proxy
+    
+    # Docker
+    # Ensure parent directory exists
+    mkdir -p ~/.docker
+    # Create file if it doesn't exist. Ensure it contains valid JSON
+    [ -s ~/.docker/config.json ] || printf '{}\n' > ~/.docker/config.json
+    # Create or update properties, save into temporary file
+    jq --arg http "$http_proxy" \
+       --arg https "$https_proxy" \
+       --arg no "$no_proxy" \
+       '.proxies = (.proxies // {})
+      | .proxies.default = {
+         httpProxy:  $http,
+         httpsProxy: $https,
+         noProxy:    $no
+       }' \
+   ~/.docker/config.json > ~/.docker/config.tmp
+   # Rename temporary file into original
+   mv ~/.docker/config.tmp ~/.docker/config.json
+}
+
 # Function to pull Docker images
 pull_docker_images() {
     log "Extrayendo imágenes de Docker..."
@@ -121,9 +146,8 @@ main() {
     export http_proxy=$PB_PROXY
     export https_proxy=$PB_PROXY
     export no_proxy="localhost,127.0.0.1"
-
-    git config --global http.proxy $PB_PROXY
-    git config --global https.proxy $PB_PROXY
+    # Configure proxy settings across multiple actors
+    configure_proxy
 
     # Validate all directories exist
     check_directory "$MOFLOT_DIR/web"
