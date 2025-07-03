@@ -75,7 +75,7 @@ validate_proxy() {
 
 # Main execution
 main() {
-    local use_proxy="true"
+    local use_proxy="false"
     
     check_env_var MOFLOT_DIR
     check_env_var GIT_TOKEN
