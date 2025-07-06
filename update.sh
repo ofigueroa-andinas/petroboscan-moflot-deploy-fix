@@ -111,6 +111,7 @@ main() {
     log "Actualizando repositorios Git..."
     git -C $MOFLOT_DIR/web pull
     git -C $MOFLOT_DIR/api pull
+    git -C $MOFLOT_DIR/deployment pull
 
     log "Iniciando actualización..."
     
@@ -124,7 +125,7 @@ main() {
     docker compose up -d --force-recreate frontend
     
     docker compose build backend
-    docker compose up -d backend
+    docker compose up -d --force-recreate backend
 
     success "¡Proceso de actualización completado con éxito!"
 
