@@ -108,20 +108,13 @@ main() {
     
     cd $MOFLOT_DIR
     
-    log "Efectuando limpieza adicional..."
-    [ -d "/home/web" ] && rm -rf /home/web
-    [ -d "/home/api" ] && rm -rf /home/api
-    [ -d "/home/async" ] && rm -rf /home/async
-    [ -d "/home/deployment" ] && rm -rf /home/deployment
-    [ -d "/home/Archive" ] && rm -rf /home/Archive
-    [ -d "/home/moflot-test" ] && rm -rf /home/moflot-test
-    
     log "Actualizando repositorios Git..."
     git -C $MOFLOT_DIR/web pull
 
     log "Iniciando actualización..."
     
     cd $MOFLOT_DIR/web
+    npm install
     npm run build
     
     cd $MOFLOT_DIR/deployment
