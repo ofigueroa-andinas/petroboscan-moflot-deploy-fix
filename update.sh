@@ -38,12 +38,13 @@ check_directory() {
 # Function to check if the required environment variables are set
 check_env_var() {
     local var_name="$1"
-    local var_value="${!var_name}"
-    
+
     if [ -z "$var_name" ]; then
         echo "Usage: check_env_var VARIABLE_NAME" >&2
         exit 2
     fi
+
+    local var_value="${!var_name}"
 
     if [ -z "$var_value" ]; then
         echo "Error: La variable de entorno '$var_name' no está definida o está vacía." >&2
