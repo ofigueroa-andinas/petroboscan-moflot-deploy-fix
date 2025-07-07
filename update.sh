@@ -110,20 +110,15 @@ main() {
     cd $MOFLOT_DIR
     
     log "Actualizando repositorios Git..."
-    git -C $MOFLOT_DIR/web pull
-    git -C $MOFLOT_DIR/api pull
-    git -C $MOFLOT_DIR/deployment pull
+    git -C $MOFLOT_DIR/api fetch origin
+	git -C $MOFLOT_DIR/api reset --hard HEAD
+    git -C $MOFLOT_DIR/api checkout -B deploy origin/deploy
 
     log "Iniciando actualización..."
-    
-    cd $MOFLOT_DIR/web
-    npm install
-    npm run build
     
     cd $MOFLOT_DIR/deployment
     
     log "Reiniciando servicios de Docker..."
-    docker compose up -d --force-recreate frontend
     
     docker compose build backend
     docker compose up -d --force-recreate backend
