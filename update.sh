@@ -112,10 +112,6 @@ main() {
     log "Actualizando repositorios Git..."
     git -C $MOFLOT_DIR/web pull
 
-    git -C $MOFLOT_DIR/api reset --hard HEAD
-    git -C $MOFLOT_DIR/api checkout main
-    git -C $MOFLOT_DIR/api pull
-
     log "Iniciando actualización..."
     
     cd $MOFLOT_DIR/web
@@ -125,11 +121,7 @@ main() {
     cd $MOFLOT_DIR/deployment
     
     log "Reiniciando servicios de Docker..."
-    docker compose build backend
-    docker compose up -d --force-recreate frontend backend
-
-    log "Ejecutando migraciones de base de datos..."
-    docker compose exec backend php artisan migrate
+    docker compose up -d --force-recreate frontend
 
     success "¡Proceso de actualización completado con éxito!"
 
