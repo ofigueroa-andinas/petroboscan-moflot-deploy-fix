@@ -89,7 +89,7 @@ main() {
         log "Configurando proxy..."
         export http_proxy=$PB_PROXY
         export https_proxy=$PB_PROXY
-        export no_proxy="localhost,127.0.0.1,backend,emitter,frontend,listener,postgres,processor,redis"
+        export no_proxy="localhost,127.0.0.1,backend,emitter,frontend,listener,postgres,processor,redis,10.0.0.1"
 
         git config --global http.proxy $http_proxy
         git config --global https.proxy $https_proxy
