@@ -104,36 +104,36 @@ main() {
     check_directory "$MOFLOT_DIR/async"
     check_directory "$MOFLOT_DIR/deployment"
     
-    # Store original directory
-    ORIGINAL_DIR=$(pwd)
-    
-    cd $MOFLOT_DIR
-    
     log "Actualizando repositorios Git..."
     git -C $MOFLOT_DIR/web pull
     git -C $MOFLOT_DIR/api pull
 
     log "Iniciando actualización..."
     
-    cd $MOFLOT_DIR/web
+    pushd $MOFLOT_DIR/web
     npm install
     npm run build
     
     cd $MOFLOT_DIR/deployment
     
-    log "Reiniciando servicios de Docker..."
+    log "Reconstruyendo servicios de Docker..."
     docker compose build backend
     docker compose up -d --force-recreate frontend backend
 
     log "Ejecutando migraciones de base de datos..."
     docker compose exec backend php artisan migrate
 
+    log "Creando rutinas CRON..."
+    CRON_1="* * * * * cd $MOFLOT_DIR/deployment && docker compose run --rm backend php artisan maintenance:check"
+    CRON_2="0 1 * * * cd $MOFLOT_DIR/deployment && docker compose run --rm backend php artisan app:check-expiring-documents-for-drivers"
+    (crontab -l 2>/dev/null; echo "$CRON_1"; echo "$CRON_2") | sort -u | crontab -
+
     success "¡Proceso de actualización completado con éxito!"
 
     log "Servicios:"
     docker compose ps
 
-    cd $ORIGINAL_DIR
+    popd
 }
 
 # Run main function
