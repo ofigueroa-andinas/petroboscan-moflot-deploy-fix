@@ -133,6 +133,9 @@ main() {
     log "Servicios:"
     docker compose ps
 
+    log "Rutinas creadas:"
+    crontab -l
+
     popd
 }
 
