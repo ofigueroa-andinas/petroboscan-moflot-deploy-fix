@@ -111,16 +111,11 @@ main() {
 
     log "Iniciando actualización..."
     
-    pushd $MOFLOT_DIR/web
-    npm install
-    npm run build
-    
     cd $MOFLOT_DIR/deployment
     
     log "Reconstruyendo servicios de Docker..."
     docker compose build backend
-    docker compose up -d --force-recreate frontend backend
-    docker compose up -d --force-recreate emitter processor listener
+    docker compose up -d --force-recreate backend
 
     log "Ejecutando migraciones de base de datos..."
     docker compose exec backend php artisan migrate
@@ -129,11 +124,6 @@ main() {
 
     log "Servicios:"
     docker compose ps
-
-    log "Rutinas creadas:"
-    crontab -l
-
-    popd
 }
 
 # Run main function
