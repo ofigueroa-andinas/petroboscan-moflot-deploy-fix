@@ -106,19 +106,19 @@ main() {
     
     log "Actualizando repositorios Git..."
     # git -C $MOFLOT_DIR/web pull
-    # git -C $MOFLOT_DIR/api pull
-    git -C $MOFLOT_DIR/async pull
+    git -C $MOFLOT_DIR/api pull
+    # git -C $MOFLOT_DIR/async pull
 
     log "Iniciando actualización..."
 	
-    cd $MOFLOT_DIR/async/processor
-    npm run build
+    # cd $MOFLOT_DIR/async/processor
+    # npm run build
     
     cd $MOFLOT_DIR/deployment
     
     log "Reconstruyendo servicios de Docker..."
-    # docker compose build backend
-    docker compose up -d --force-recreate processor
+    docker compose build backend
+    docker compose up -d --force-recreate backend
 
     # log "Ejecutando migraciones de base de datos..."
     # docker compose exec backend php artisan migrate
