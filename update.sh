@@ -96,6 +96,19 @@ main() {
         
         npm config set proxy $http_proxy
         npm config set https-proxy $https_proxy
+        
+        log "Configurando proxy Docker..."
+        mkdir -p ~/.docker
+        [ -s ~/.docker/config.json ] || printf '{}\n' > ~/.docker/config.json
+        jq --arg http "$http_proxy" --arg https "$https_proxy" --arg no "$no_proxy" \
+            '.proxies = (.proxies // {})
+            | .proxies.default = {
+            httpProxy:  $http,
+            httpsProxy: $https,
+            noProxy:  $no
+            }' \
+            ~/.docker/config.json > ~/.docker/config.tmp
+        mv ~/.docker/config.tmp ~/.docker/config.json
     fi
 
     # Validate all directories exist
@@ -110,7 +123,7 @@ main() {
     # git -C $MOFLOT_DIR/async pull
 
     log "Iniciando actualización..."
-	
+    
     # cd $MOFLOT_DIR/async/processor
     # npm run build
     
