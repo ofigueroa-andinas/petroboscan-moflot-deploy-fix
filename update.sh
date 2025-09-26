@@ -58,7 +58,7 @@ validate_proxy() {
     export http_proxy=$PB_PROXY
     export https_proxy=$PB_PROXY
     
-    URL="https://www.google.com"
+    URL="https://www.bing.com"
     HTTP_CODE=$(curl -s --head -o /dev/null -w '%{response_code}' "$URL") || {
         exit_code=$?
         echo "La solicitud a $URL falló (código de salida curl $exit_code)"
@@ -111,43 +111,15 @@ main() {
         mv ~/.docker/config.tmp ~/.docker/config.json
     fi
 
-    # Validate all directories exist
-    check_directory "$MOFLOT_DIR/web"
-    check_directory "$MOFLOT_DIR/api"
-    check_directory "$MOFLOT_DIR/async"
     check_directory "$MOFLOT_DIR/deployment"
     
-    log "Actualizando repositorios Git..."
-    git -C $MOFLOT_DIR/web pull
-    git -C $MOFLOT_DIR/api pull
-    # git -C $MOFLOT_DIR/async pull
+    log "Actualizando la actualización..."
+    git -C $MOFLOT_DIR/deployment fetch origin
+    git -C $MOFLOT_DIR/deployment reset --merge @{u}
 
-    log "Iniciando actualización..."
+    log "Ejecutando actualización..."
     
-    cd $MOFLOT_DIR/web
-    npm install
-    npm run build
-    
-    # cd $MOFLOT_DIR/async/processor
-    # npm install
-    # npm run build
-    
-    cd $MOFLOT_DIR/deployment
-    
-    log "Reconstruyendo servicios de Docker..."
-    docker compose build backend
-    
-    docker compose up -d --force-recreate frontend
-    docker compose up -d --force-recreate backend
-    # docker compose up -d --force-recreate processor
-
-    log "Ejecutando migraciones de base de datos..."
-    docker compose exec backend php artisan migrate
-
-    success "¡Proceso de actualización completado con éxito!"
-
-    log "Servicios:"
-    docker compose ps
+    $MOFLOT_DIR/deployment/update.sh
 }
 
 # Run main function
