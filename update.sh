@@ -118,8 +118,12 @@ main() {
     check_directory "$MOFLOT_DIR/deployment"
     
     log "Actualizando repositorios Git..."
-    git -C $MOFLOT_DIR/web pull
-    git -C $MOFLOT_DIR/api pull
+    # git -C $MOFLOT_DIR/web pull
+    git -C $MOFLOT_DIR/web fetch origin
+    git -C $MOFLOT_DIR/web checkout feature/DES-MOF-019
+    # git -C $MOFLOT_DIR/api pull
+    git -C $MOFLOT_DIR/api fetch origin
+    git -C $MOFLOT_DIR/api checkout feature/DES-MOF-019
     # git -C $MOFLOT_DIR/async pull
 
     log "Iniciando actualización..."
